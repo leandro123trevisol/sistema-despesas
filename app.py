@@ -24,44 +24,98 @@ credentials = Credentials.from_service_account_info(
 
 client = gspread.authorize(credentials)
 
-# 👇 NOME EXATO DA SUA PLANILHA
 SPREADSHEET_NAME = "BASE_DESPESAS_EMPRESA"
-
 sheet = client.open(SPREADSHEET_NAME).sheet1
 
 # -------------------------------
-# FORMULÁRIO
+# CONFIGURAÇÃO DA DEMANDA
 # -------------------------------
 
-st.subheader("Novo Lançamento")
+st.header("📋 Configuração da Demanda")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    data = st.date_input("Data", datetime.today())
+    data_demanda = st.date_input("Data da Demanda", datetime.today())
 
 with col2:
-    categoria = st.selectbox("Categoria", [
-        "Combustível",
-        "Impostos",
-        "Manutenção",
-        "Fornecedor",
-        "Pessoal",
-        "Outros"
-    ])
+    qtd_lancamentos = st.number_input(
+        "Quantidade de lançamentos",
+        min_value=1,
+        max_value=50,
+        value=1
+    )
 
-descricao = st.text_input("Despesa")
-valor = st.number_input("Valor", min_value=0.0, format="%.2f")
+if st.button("🚀 Iniciar Demanda"):
+    st.session_state.iniciar_demanda = True
+    st.session_state.qtd = qtd_lancamentos
+    st.session_state.data = data_demanda
 
-if st.button("Salvar Lançamento"):
+# -------------------------------
+# FORMULÁRIO DINÂMICO
+# -------------------------------
 
-    nova_linha = [
-        str(data),
-        categoria,
-        descricao,
-        float(valor)
-    ]
+if "iniciar_demanda" in st.session_state and st.session_state.iniciar_demanda:
 
-    sheet.append_row(nova_linha)
+    st.header("📝 Lançamentos")
 
-    st.success("✅ Lançamento salvo no Google Sheets com sucesso!")
+    total_demanda = 0
+
+    for i in range(st.session_state.qtd):
+
+        st.subheader(f"Lançamento {i+1}")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            categoria = st.selectbox(
+                f"Categoria",
+                [
+                    "Combustível",
+                    "Impostos",
+                    "Manutenção",
+                    "Fornecedor",
+                    "Pessoal",
+                    "Outros"
+                ],
+                key=f"categoria_{i}"
+            )
+
+        with col2:
+            valor = st.number_input(
+                f"Valor",
+                min_value=0.0,
+                format="%.2f",
+                key=f"valor_{i}"
+            )
+
+        descricao = st.text_input(
+            f"Despesa",
+            key=f"descricao_{i}"
+        )
+
+        total_demanda += valor
+
+    st.markdown(f"### 💵 Total da Demanda: R$ {total_demanda:,.2f}")
+
+    if st.button("💾 Salvar Todos os Lançamentos"):
+
+        for i in range(st.session_state.qtd):
+
+            categoria = st.session_state[f"categoria_{i}"]
+            valor = st.session_state[f"valor_{i}"]
+            descricao = st.session_state[f"descricao_{i}"]
+
+            nova_linha = [
+                str(st.session_state.data),
+                categoria,
+                descricao,
+                float(valor)
+            ]
+
+            sheet.append_row(nova_linha)
+
+        st.success("✅ Todos os lançamentos foram salvos com sucesso!")
+
+        st.session_state.iniciar_demanda = False
+        st.rerun()
