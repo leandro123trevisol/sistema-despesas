@@ -120,7 +120,38 @@ if "iniciar_demanda" in st.session_state and st.session_state.iniciar_demanda:
                     "Internet/Telefonia",
                     "Investimentos",
                     "Janta/Rota",
-                    "Lavação"
+                    "Lavação",
+                    "Licença - Estrada do Mar",
+                    "Limpeza Galpão",
+                    "Mecânica",
+                    "Mecânica - Empilhadeira",
+                    "Multa de Trânsito",
+                    "Multa de Recisória",
+                    "Peças de Caminhão",
+                    "Pedágio",
+                    "Pensão Alimentícia",
+                    "Perícias",
+                    "Pneu",
+                    "Prêmio Verão",
+                    "Presentes Endomarketing",
+                    "Produto Limpeza",
+                    "Pró Labore",
+                    "Relógio Ponto"
+                    "Revisão",
+                    "Segurança do Trabalho/eSocial",
+                    "Seguros",
+                    "Serviços Financeiros",
+                    "Serviços Informática",
+                    "Serviços Patrimoniais",
+                    "Termo de Recisão de Contrato de Trabalho - TRCT",
+                    "Teste de Fuligem",
+                    "Uniformes",
+                    "Vale Alimentação",
+                    "Vale Refeição",
+                    "Vales",
+                    "Verbas Advocatícias",
+                    "Vigilância",
+                    "Vistoria Inmetro"
                 ],
                 key=f"categoria_{i}"
             )
@@ -163,4 +194,5 @@ if "iniciar_demanda" in st.session_state and st.session_state.iniciar_demanda:
 
         st.session_state.iniciar_demanda = False
         st.rerun()
+
 
