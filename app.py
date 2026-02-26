@@ -36,7 +36,11 @@ st.header("📋 Configuração da Demanda")
 col1, col2 = st.columns(2)
 
 with col1:
-    data_demanda = st.date_input("Data da Demanda", datetime.today())
+    data_demanda = st.date_input(
+    "Data da Demanda",
+    value=datetime.today(),
+    format="DD/MM/YYYY"
+)
 
 with col2:
     qtd_lancamentos = st.number_input(
@@ -194,5 +198,6 @@ if "iniciar_demanda" in st.session_state and st.session_state.iniciar_demanda:
 
         st.session_state.iniciar_demanda = False
         st.rerun()
+
 
 
